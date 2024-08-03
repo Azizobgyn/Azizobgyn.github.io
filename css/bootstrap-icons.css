@@ -1254,6 +1254,7 @@ url("../fonts/bootstrap-icons.woff?856008caa5eb66df68595e734e59580d") format("wo
 .bi-thermometer::before { content: "\f5d2"; }
 .bi-three-dots-vertical::before { content: "\f5d3"; }
 .bi-three-dots::before { content: "\f5d4"; }
+.bi-tiktok::before { content: "\f6cc"; }
 .bi-toggle-off::before { content: "\f5d5"; }
 .bi-toggle-on::before { content: "\f5d6"; }
 .bi-toggle2-off::before { content: "\f5d7"; }
