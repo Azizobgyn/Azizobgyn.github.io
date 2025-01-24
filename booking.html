@@ -111,16 +111,7 @@ https://templatemo.com/tm-566-medic-care
                                         
                                         <div class="col-lg-6 col-12">
                                             <label for="birthday" class="required-field">Birthday (MM/DD/YYYY)</label>
-                                            <input type="text" name="Birthday" id="birthday" class="form-control" placeholwaider="01/01/2024" onkeyup="
-                                            var v = this.value;
-                                            if (v.match(/^\d{2}$/) !== null) {
-                                                this.value = v + '/';
-                                            } else if (v.match(/^\d{2}\/\d{2}$/) !== null) {
-                                                this.value = v + '/';
-                                           }"
-                                        maxlength="14"
-                                        required
-                                        >
+                                            <input type="text" name="Birthday" id="birthday" class="form-control" placeholder="01/01/2024" minlength="10" maxlength="10" required>
                                         </div>
 
                                         <div class="col-lg-6 col-12">
@@ -295,11 +286,13 @@ https://templatemo.com/tm-566-medic-care
             let input_birthday = document.getElementById('birthday');
             let currentYear = new Date().getFullYear();
 
-            function checkBirthdayValue(str, max, min) {
-                if (str.charAt(0) !== '0' || str == '00') {
+            function checkBirthdayValue(str, max, min, isYear) {
+                if (isYear || (!isYear && (str.charAt(0) !== '0' || str == '00'))) {
                     let num = parseInt(str);
-                    if(isNaN(num) || num <= 0 || num > max || (num < min && str.length == 4)) num = -1;
-                    if(num > parseInt(max.toString().charAt(0)) && num.toString().length == 1){
+                    console.log(str);
+                    console.log(str.length)
+                    if((isNaN(num)) || num <= 0 || num > max || (isYear && (num < min && str.length == 4))) num = -1;
+                    if((num > parseInt(max.toString().charAt(0)) || (str == '1/')) && num.toString().length == 1){
                         str = '0' + num;
                     } else if(num == -1){
                         str = "";
@@ -313,17 +306,22 @@ https://templatemo.com/tm-566-medic-care
             input_birthday.addEventListener('input', function(e) {
                 this.type = 'text';
                 let input = this.value;
-                if (/\D\/$/.test(input)) input = input.substr(0, input.length - 3);
+                console.log(input);
+                if (/\D\/$/.test(input)) input = input.substr(0, input.length - 2);
+                if (/\d\/$/.test(input) && isNaN(parseInt(input.substring(input.length - 3, input.length-2)))) input = input.substring(0, input.length-2) + "0" + input.substring(input.length-2);
+                
                 let values = input.split('/').map(function(v) {
                     return v.replace(/\D/g, '')
                 });
-                if (values[0]) values[0] = checkBirthdayValue(values[0], 12, 1); // month check
-                if (values[1]) values[1] = checkBirthdayValue(values[1], 31, 1); // day check
-                if (values[2]) values[2] = checkBirthdayValue(values[2], currentYear, 1959); // year check
+
+                console.log(values[0] +  " + " + values[1] + " + " + values[2]);
+                if (values[0]) values[0] = checkBirthdayValue(values[0], 12, 1, false); // month check
+                if (values[1]) values[1] = checkBirthdayValue(values[1], 31, 1, false); // day check
+                if (values[2]) values[2] = checkBirthdayValue(values[2], currentYear, currentYear-75, true); // year check
                 let output = values.map(function(v, i) {
-                    return v.length == 2 && i < 2 ? v + ' / ' : v;
+                    return v.length == 2 && i < 2 ? v + '/' : v;
                 });
-                this.value = output.join('').substr(0, 14);
+                this.value = output.join('').substr(0, 10);
             });
         </script>
 <!--
